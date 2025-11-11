@@ -1,7 +1,7 @@
 import { readdir, stat, readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { generateVisualization } from './llm';
+import { execute_llm } from './llm';
 
 export interface LatestMdFile {
   filename: string;
@@ -47,7 +47,7 @@ export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
   };
 }
 
-export async function regenerateVisualization(): Promise<{ config: any; message: string }> {
+export async function generateVisualization(): Promise<{ config: any; message: string }> {
   // Get the latest markdown file
   const latestMd = await getLatestMarkdownFile();
   
@@ -81,7 +81,7 @@ export async function regenerateVisualization(): Promise<{ config: any; message:
   }
   
   // Generate new visualization
-  const config = await generateVisualization(markdownContent);
+  const config = await execute_llm(markdownContent);
   
   if (!config) {
     throw new Error('Failed to generate visualization config from LLM');

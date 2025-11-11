@@ -12,7 +12,7 @@ export interface VisualizationConfig {
   colors?: string[];
 }
 
-export async function generateVisualization(markdownContent: string): Promise<VisualizationConfig> {
+export async function execute_llm(markdownContent: string): Promise<VisualizationConfig> {
   const prompt = `Analyze the following markdown content and generate a data visualization configuration in JSON format.
 
 The markdown content:

@@ -1,4 +1,4 @@
-name: Regenerate Visualization
+name: Generate Visualization
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  regenerate:
+  generate-visualization:
     runs-on: ubuntu-latest
     
     steps:
@@ -33,11 +33,17 @@ jobs:
       - name: Ensure generated directory exists
         run: mkdir -p generated
 
-      - name: Regenerate visualization
+      - name: Generate visualization
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: npx tsx scripts/regenerate.ts
+        run: |
+          npx tsx -e "
+          import { generateVisualization } from './lib/utils';
+          generateVisualization()
+            .then(result => { console.log('Success:', result.message); process.exit(0); })
+            .catch(error => { console.error('Error:', error.message); process.exit(1); });
+          "
 
       - name: Commit changes
         run: |
