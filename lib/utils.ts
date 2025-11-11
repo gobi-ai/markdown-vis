@@ -11,9 +11,9 @@ export interface LatestMdFile {
 }
 
 export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
-  const publishDir = join(process.cwd(), 'public');
+  const publishDir = join(process.cwd(), 'documents');
   
-  // Read all files in public directory
+  // Read all files in documents directory
   const files = await readdir(publishDir);
   const mdFiles = files.filter(file => file.endsWith('.md'));
   

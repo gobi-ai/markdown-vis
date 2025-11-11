@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'public/**/*.md'
+      - 'documents/**/*.md'
 
 permissions:
   contents: write

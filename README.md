@@ -1,6 +1,6 @@
 # Markdown Visualization Dashboard
 
-A Next.js single-page application that automatically generates data visualizations from markdown files using LLM analysis. The dashboard monitors markdown files in the `public` folder and creates appropriate visualizations using Recharts.
+A Next.js single-page application that automatically generates data visualizations from markdown files using LLM analysis. The dashboard monitors markdown files in the `documents` folder and creates appropriate visualizations using Recharts.
 
 ## Features
 
@@ -44,7 +44,7 @@ ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 ### Running Locally
 
-1. Add markdown files to the `public/` folder
+1. Add markdown files to the `documents/` folder
 
 2. Start the development server:
 ```bash
@@ -66,7 +66,7 @@ npm start
 
 ```
 /
-├── public/               # Place your markdown files here
+├── documents/            # Place your markdown files here
 ├── generated/            # Generated visualization configs (auto-created)
 │   ├── visualization.json
 │   └── last-processed.md
@@ -87,7 +87,7 @@ npm start
 
 ## How It Works
 
-1. **Markdown Detection**: The app scans the `public/` folder and identifies the most recently updated markdown file based on modification time.
+1. **Markdown Detection**: The app scans the `documents/` folder and identifies the most recently updated markdown file based on modification time.
 
 2. **LLM Analysis**: The markdown content is sent to an LLM (OpenAI or Anthropic) with a prompt to:
    - Analyze the content for numeric data, trends, and comparisons
@@ -111,13 +111,13 @@ npm start
 
 ## GitHub Actions Setup
 
-The GitHub Actions workflow automatically regenerates visualizations when markdown files in the `public/` folder are updated. To enable this:
+The GitHub Actions workflow automatically regenerates visualizations when markdown files in the `documents/` folder are updated. To enable this:
 
 1. Add your LLM API key(s) as GitHub Secrets:
    - Go to your repository Settings → Secrets and variables → Actions
    - Add `OPENAI_API_KEY` and/or `ANTHROPIC_API_KEY`
 
-2. The workflow will automatically run on pushes to `main` branch when `.md` files in `public/` are changed.
+2. The workflow will automatically run on pushes to `main` branch when `.md` files in `documents/` are changed.
 
 3. The generated visualization will be automatically committed back to the repository.
 
