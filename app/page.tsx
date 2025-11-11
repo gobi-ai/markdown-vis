@@ -80,7 +80,9 @@ export default function Home() {
   };
 
   const renderChart = () => {
-    if (!config) return null;
+    if (!config) {
+      return <div>No chart configuration available</div>;
+    }
 
     const colors = config.colors || ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00', '#0088fe'];
 
