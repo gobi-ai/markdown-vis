@@ -43,24 +43,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # Save the generated files before resetting
-          if [ -d "generated" ]; then
-            cp -r generated /tmp/generated-backup
-          fi
-          # Reset to the specific commit that triggered this workflow
-          # ${{ github.event.head_commit.id }} is the commit SHA that triggered the push
-          git reset --hard ${{ github.event.head_commit.id }}
-          # Restore the generated files
-          if [ -d "/tmp/generated-backup" ]; then
-            cp -r /tmp/generated-backup/* generated/ 2>/dev/null || true
-          fi
           git add generated/
-          # Check if there are changes to commit
           if ! git diff --staged --quiet; then
-            # Amend the commit that triggered this workflow
-            # This will add the generated files to the same commit that added/modified the MD file
             git commit --amend --no-edit --no-verify
-            # Force push to update the commit (using --force-with-lease for safety)
             git push --force-with-lease origin ${{ github.ref_name }}
           fi
 
