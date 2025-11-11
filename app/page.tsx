@@ -259,7 +259,7 @@ export default function Home() {
 
         {!loading && !error && !config && (
           <div style={{ textAlign: 'center', padding: '4rem', color: '#666' }}>
-            No visualization available. Please add markdown files to the Publish folder.
+            No visualization available. Please add markdown files to the public folder.
           </div>
         )}
       </div>
