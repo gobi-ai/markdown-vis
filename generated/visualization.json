@@ -13,16 +13,17 @@
     },
     {
       "month": "March",
-      "sales": 91000,
+      "sales": 1001000,
       "growth": 17.3
     }
   ],
   "xAxisKey": "month",
   "yAxisKey": "sales",
-  "title": "Monthly Sales Data Q1 2024",
-  "description": "Bar chart showing monthly sales and growth for Q1 2024, with March being the best performing month.",
+  "title": "Monthly Sales Data - Q1 2024",
+  "description": "Sales performance and growth rate for each month in Q1 2024",
   "colors": [
     "#8884d8",
-    "#82ca9d"
+    "#82ca9d",
+    "#ffc658"
   ]
 }
