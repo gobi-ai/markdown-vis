@@ -27,7 +27,6 @@ export default function Home() {
   const [config, setConfig] = useState<VisualizationConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     loadVisualization();
@@ -38,14 +37,9 @@ export default function Home() {
       setLoading(true);
       setError(null);
       
-      // Try to load existing visualization first
-      let response = await fetch('/api/visualization');
+      const response = await fetch('/api/visualization');
       if (!response.ok) {
-        // If no existing visualization, regenerate
-        response = await fetch('/api/regenerate', { method: 'POST' });
-        if (!response.ok) {
-          throw new Error('Failed to load or generate visualization');
-        }
+        throw new Error('No visualization available');
       }
       
       const data = await response.json();
@@ -54,28 +48,6 @@ export default function Home() {
       setError(err.message || 'Failed to load visualization');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleRegenerate = async () => {
-    try {
-      setRegenerating(true);
-      setError(null);
-      
-      const response = await fetch('/api/regenerate', {
-        method: 'POST',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to regenerate visualization');
-      }
-      
-      const data = await response.json();
-      setConfig(data.config);
-    } catch (err: any) {
-      setError(err.message || 'Failed to regenerate visualization');
-    } finally {
-      setRegenerating(false);
     }
   };
 
@@ -192,27 +164,10 @@ export default function Home() {
   return (
     <main style={{ padding: '2rem', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>
             Markdown Visualization Dashboard
           </h1>
-          <button
-            onClick={handleRegenerate}
-            disabled={regenerating}
-            style={{
-              padding: '0.75rem 1.5rem',
-              backgroundColor: '#0070f3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.5rem',
-              cursor: regenerating ? 'not-allowed' : 'pointer',
-              fontSize: '1rem',
-              fontWeight: '500',
-              opacity: regenerating ? 0.6 : 1,
-            }}
-          >
-            {regenerating ? 'Regenerating...' : 'Regenerate'}
-          </button>
         </div>
 
         {loading && (
