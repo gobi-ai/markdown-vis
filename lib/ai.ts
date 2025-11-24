@@ -9,20 +9,19 @@ export async function generateImageFromMarkdown(markdownContent: string): Promis
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
-  const prompt = `Analyze the following markdown content and generate a Scalable Vector Graphics (SVG) image that visualizes the data.
+  const prompt = `Analyze the following markdown content and generate a Scalable Vector Graphics (SVG) infographic that visualizes the data.
   
   The markdown content:
   ${markdownContent}
   
   Requirements:
-  1. Create a professional, clean, and colorful data visualization (chart, graph, or diagram).
+  1. Create a professional, clean, and colorful infographic style visualization.
   2. Use a white background (fill="#ffffff").
   3. Ensure all text is legible.
   4. The SVG should be 800x600 pixels.
   5. Return ONLY the raw SVG code. Do not wrap it in markdown code blocks (no \`\`\`xml or \`\`\`). Do not include any explanation.
   
-  If the data is suitable for a bar chart, line chart, pie chart, or similar, choose the best fit.
-  If the content is text-heavy, create a concept map or infographic style SVG.
+  Create an infographic that combines visual elements, icons, charts, and minimal text to effectively communicate the information from the markdown content.
   `;
 
   try {
