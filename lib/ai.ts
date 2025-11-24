@@ -7,11 +7,11 @@ export async function generateImageFromMarkdown(markdownContent: string): Promis
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-image-preview" });
 
-  const prompt = `Analyze the following markdown content and generate a Scalable Vector Graphics (SVG) infographic that visualizes the data.
+  const prompt = `Generate a Scalable Vector Graphics (SVG) infographic based on the following markdown content.
   
-  The markdown content:
+  Markdown content:
   ${markdownContent}
   
   Requirements:
@@ -19,9 +19,9 @@ export async function generateImageFromMarkdown(markdownContent: string): Promis
   2. Use a white background (fill="#ffffff").
   3. Ensure all text is legible.
   4. The SVG should be 800x600 pixels.
-  5. Return ONLY the raw SVG code. Do not wrap it in markdown code blocks (no \`\`\`xml or \`\`\`). Do not include any explanation.
+  5. Return ONLY the raw SVG code. Do not wrap it in markdown code blocks (no \`\`\`xml or \`\`\`). Do not include any explanation or analysis.
   
-  Create an infographic that combines visual elements, icons, charts, and minimal text to effectively communicate the information from the markdown content.
+  Create an infographic that combines visual elements, icons, charts, and minimal text to effectively communicate the information.
   `;
 
   try {
