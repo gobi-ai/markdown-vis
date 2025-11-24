@@ -47,24 +47,6 @@ export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
 export async function generateVisualization(): Promise<{ imageAvailable: boolean; message: string }> {
   const latestMd = await getLatestMarkdownFile();
   
-  const metadataPath = join(process.cwd(), 'generated', 'last-processed.md');
-  let lastProcessed = '';
-  if (existsSync(metadataPath)) {
-    lastProcessed = await readFile(metadataPath, 'utf-8');
-  }
-  
-  const latestMdHash = `${latestMd.filename}:${latestMd.mtime}`;
-  
-  if (lastProcessed === latestMdHash) {
-    const vizPath = join(process.cwd(), 'generated', 'vis.png');
-    if (existsSync(vizPath)) {
-      return {
-        imageAvailable: true,
-        message: 'Using existing visualization'
-      };
-    }
-  }
-  
   const markdownContent = await readFile(latestMd.path, 'utf-8');
   
   if (!markdownContent || markdownContent.trim().length === 0) {
@@ -80,8 +62,6 @@ export async function generateVisualization(): Promise<{ imageAvailable: boolean
   
   const vizPath = join(generatedDir, 'vis.png');
   await writeFile(vizPath, pngBuffer);
-  
-  await writeFile(metadataPath, latestMdHash, 'utf-8');
   
   return {
     imageAvailable: true,

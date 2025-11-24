@@ -1,9 +1,6 @@
 import { generateVisualization } from './lib/utils';
 import * as dotenv from 'dotenv';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
 
-// Load environment variables from .env.local or .env
 dotenv.config({ path: '.env.local' });
 dotenv.config();
 
@@ -13,10 +10,6 @@ if (!process.env.GEMINI_API_KEY) {
   console.error('Error: GEMINI_API_KEY is not set in environment variables');
   process.exit(1);
 }
-
-// Force regeneration by deleting the tracking file
-const metadataPath = join(process.cwd(), 'generated', 'last-processed.md');
-unlink(metadataPath).catch(() => {}); // Ignore error if file doesn't exist
 
 generateVisualization()
   .then(result => {
