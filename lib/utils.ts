@@ -1,7 +1,7 @@
 import { readdir, stat, readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { execute_llm } from './llm';
+import { generateImageFromMarkdown } from './ai';
 
 export interface LatestMdFile {
   filename: string;
@@ -13,7 +13,6 @@ export interface LatestMdFile {
 export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
   const publishDir = join(process.cwd(), 'documents');
   
-  // Read all files in documents directory
   const files = await readdir(publishDir);
   const mdFiles = files.filter(file => file.endsWith('.md'));
   
@@ -21,7 +20,6 @@ export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
     throw new Error('No markdown files found');
   }
   
-  // Get file stats and find the most recently updated
   const fileStats = await Promise.all(
     mdFiles.map(async (file) => {
       const filePath = join(publishDir, file);
@@ -35,7 +33,6 @@ export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
     })
   );
   
-  // Sort by modification time (most recent first)
   fileStats.sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
   const latestFile = fileStats[0];
   
@@ -47,62 +44,47 @@ export async function getLatestMarkdownFile(): Promise<LatestMdFile> {
   };
 }
 
-export async function generateVisualization(): Promise<{ config: any; message: string }> {
-  // Get the latest markdown file
+export async function generateVisualization(): Promise<{ imageAvailable: boolean; message: string }> {
   const latestMd = await getLatestMarkdownFile();
   
-  // Check if we've already processed this file
   const metadataPath = join(process.cwd(), 'generated', 'last-processed.md');
   let lastProcessed = '';
   if (existsSync(metadataPath)) {
     lastProcessed = await readFile(metadataPath, 'utf-8');
   }
   
-  // Check if the file is newer than what we've processed
   const latestMdHash = `${latestMd.filename}:${latestMd.mtime}`;
   
   if (lastProcessed === latestMdHash) {
-    // Already processed, just return existing visualization
-    const vizPath = join(process.cwd(), 'generated', 'visualization.json');
+    const vizPath = join(process.cwd(), 'generated', 'vis.png');
     if (existsSync(vizPath)) {
-      const existingViz = await readFile(vizPath, 'utf-8');
       return {
-        config: JSON.parse(existingViz),
+        imageAvailable: true,
         message: 'Using existing visualization'
       };
     }
   }
   
-  // Read markdown content
   const markdownContent = await readFile(latestMd.path, 'utf-8');
   
   if (!markdownContent || markdownContent.trim().length === 0) {
     throw new Error(`Markdown file ${latestMd.filename} is empty`);
   }
   
-  // Generate new visualization
-  const config = await execute_llm(markdownContent);
+  const pngBuffer = await generateImageFromMarkdown(markdownContent);
   
-  if (!config) {
-    throw new Error('Failed to generate visualization config from LLM');
-  }
-  
-  // Ensure generated directory exists
   const generatedDir = join(process.cwd(), 'generated');
   if (!existsSync(generatedDir)) {
     await mkdir(generatedDir, { recursive: true });
   }
   
-  // Save visualization config
-  const vizPath = join(generatedDir, 'visualization.json');
-  await writeFile(vizPath, JSON.stringify(config, null, 2), 'utf-8');
+  const vizPath = join(generatedDir, 'vis.png');
+  await writeFile(vizPath, pngBuffer);
   
-  // Save metadata
   await writeFile(metadataPath, latestMdHash, 'utf-8');
   
   return {
-    config,
+    imageAvailable: true,
     message: 'Visualization generated and saved'
   };
 }
-

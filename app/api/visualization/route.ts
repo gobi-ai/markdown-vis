@@ -1,29 +1,15 @@
 import { NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { generateVisualization } from '@/lib/utils';
 
-export async function GET() {
+export async function POST() {
   try {
-    const vizPath = join(process.cwd(), 'generated', 'visualization.json');
-    
-    if (!existsSync(vizPath)) {
-      return NextResponse.json({ error: 'No visualization found' }, { status: 404 });
-    }
-    
-    const content = await readFile(vizPath, 'utf-8');
-    const config = JSON.parse(content);
-    
-    return NextResponse.json({
-      success: true,
-      config,
-    });
+    const result = await generateVisualization();
+    return NextResponse.json({ success: true, message: result.message });
   } catch (error: any) {
-    console.error('Error loading visualization:', error);
+    console.error('Error generating visualization:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to load visualization' },
+      { error: error.message || 'Failed to generate visualization' },
       { status: 500 }
     );
   }
 }
-
