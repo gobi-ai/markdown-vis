@@ -4,7 +4,7 @@ A Next.js single-page application that automatically generates data visualizatio
 
 ## Features
 
-- 📊 **Automatic Visualization**: Uses **Google Gemini** to analyze markdown content and generate professional SVG/PNG charts or diagrams.
+- 📊 **Automatic Visualization**: Uses **Nano Banana (Gemini 2.5 Flash Image)** to generate professional PNG infographics directly from markdown content.
 - 🔄 **Auto-generation**: GitHub Actions workflow automatically generates visualizations on git commits.
 - 🎨 **Visuals**: Generates high-quality images suitable for any kind of data (charts, concept maps, infographics).
 - 💾 **Persistent Storage**: Generated visualization images (`vis.png`) are saved to the file system and committed to git.
@@ -82,9 +82,7 @@ npm start
 
 1. **Markdown Detection**: The app scans the `documents/` folder and identifies the most recently updated markdown file.
 
-2. **AI Generation**: The markdown content is sent to **Google Gemini (gemini-1.5-flash)** with a prompt to generate an SVG visualization.
-
-3. **Image Conversion**: The generated SVG code is converted to a PNG image using `sharp`.
+2. **AI Generation**: The markdown content is sent to **Nano Banana (Gemini 2.5 Flash Image)** which generates a PNG infographic directly.
 
 4. **Persistence**: The resulting image is saved as `generated/vis.png`.
 
