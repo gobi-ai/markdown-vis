@@ -22,10 +22,14 @@ export async function generateImageFromMarkdown(markdownContent: string): Promis
     contents: prompt,
   });
 
+  if (!response.candidates || !response.candidates[0] || !response.candidates[0].content || !response.candidates[0].content.parts) {
+    throw new Error('Invalid response structure');
+  }
+
   for (const part of response.candidates[0].content.parts) {
-    if (part.inlineData) {
-      const imageData = part.inlineData.data;
-      return Buffer.from(imageData, "base64");
+    const inlineData = part.inlineData;
+    if (inlineData && inlineData.data) {
+      return Buffer.from(inlineData.data, "base64");
     }
   }
 
