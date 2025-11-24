@@ -1,6 +1,8 @@
 import { generateVisualization } from './lib/utils';
 import * as dotenv from 'dotenv';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
 
 // Load environment variables from .env.local or .env
 dotenv.config({ path: '.env.local' });
@@ -22,6 +24,9 @@ try {
   console.error("Failed to initialize model:", e);
 }
 
+// Force regeneration by deleting the tracking file
+const metadataPath = join(process.cwd(), 'generated', 'last-processed.md');
+unlink(metadataPath).catch(() => {}); // Ignore error if file doesn't exist
 
 generateVisualization()
   .then(result => {
